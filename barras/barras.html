@@ -1,0 +1,59 @@
+<h1>Um corte de barras diferente</h1>
+
+
+Este trabalho de programação dinâmica consistem em resolver o seguinte
+problema:
+
+Uma empresa precisa cortar uma barra de aço de tamanho l nas posições
+x1, x2, ... ,xn medidas a partir do início da barra.  O custo de
+cada corte é proporcional ao tamanho da barra que entra na serra.  Por
+exemplo, para uma barra de tamanho 10 a ser cortada nas posições 2, 4
+e 7, há várias seqüências possíveis de corte.  Uma delas é cortar nas
+posições 2, depois 4 e depois 6, tendo-se o custo pelo corte em barras
+de tamanhos 10, 8 e 6 (com custo 24). Outra é cortar nas posições 4,
+depois 2 e depois 7 tendo-se o custo pelo corte em barras de tamanhos
+10, 4 e 6 (com custo 20).
+
+Construa um algoritmo que determina o custo mínimo de uma seqüência de
+cortes.
+
+Este trabalho tem duas partes.  A primeira é resolver o problema por
+indução.  Depois de resolver por indução, bolar uma programação
+dinâmica e programar.  Aconselho não tentar sair programando logo de cara.
+
+
+<h3>Entrada</h3>
+
+A entrada para o programa consiste de vários casos de teste.  A linha
+1 de cada caso tem um inteiro positivo l que representa o tamanho da
+barra, l<1000.  A próxima linha contém o número n de cortes que devem
+ser feitos, n<50.  A linha seguinte tem n inteiros ci que representam
+as posições dos cortes, 0 < ci < l para 1 <= i <= n.  O fim da entrada
+é indicado por l=0.
+
+<h3>Saída</h3>
+
+Para cada caso da entrada, seu programa deve imprimir o custo mínimo
+de corte da barra, no formato ilustrado abaixo.
+
+<h3>Exemplo</h3>
+
+Para a entrada
+
+<pre>
+100
+3
+25 50 75
+10
+4
+4 5 7 8
+0
+</pre>
+
+A saída é
+
+<pre>
+200
+22
+</pre>
+

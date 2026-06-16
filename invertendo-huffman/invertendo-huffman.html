@@ -1,0 +1,75 @@
+<div align="center"><h1>Invertendo Huffman</h1></div>
+
+<p>
+O algoritmo de Huffman é um método de codificação muito utilizado em compressão de textos.
+Dado um texto com N caracteres diferentes, o algoritmo de Huffman escolhe N códigos, um para cada caractere.
+O texto é comprimido utilizando esses códigos.
+Para escolher os códigos, o algoritmo constrói uma árvore binária com N nós folhas da seguinte forma (para  N &gt;= 2).
+</p>
+
+<p>
+<ol>
+<li>Para cada caractere diferente no texto, construa uma árvore com apenas um nó e atribua a esse nó um peso correspondente ao número de ocorrências do caractere no texto.</li>
+<li>Construa um conjunto s contendo todas as N árvores criadas em (1).</li>
+<li>Enquanto s contém mais de uma árvore, faça:</li>
+<ul>
+<li>(a) Escolha t1 em s com peso mínimo e remova t1 de s.</li>
+<li>(b) Escolha t2 em s com peso mínimo e remova t2 de s.</li>
+<li>(c) Construa uma nova árvore t com t1 sendo sua subárvore esquerda e t2 como sua subárvore direita, e atribua à t o soma dos pesos de t1 e t2.</li>
+<li>(d) Inclua t em s.</li>
+</ul>
+<li> Retorne somente a única árvore restante em s.</li>
+</ol>
+</p>
+
+<p>
+Para o texto "abracadabra", a árvore produzida pelo algoritmo pode parecer com a árvore da esquerda da figura abaixo, onde cada nó interno é rotulado com o peso de sua subárvore.
+Note que a árvore da direita na figura abaixo também pode ser produzida pelo algoritmo, assim como tantas outras, porque nos passos 3a e 3b o conjunto s pode conter várias árvores com o mesmo peso mínimo.
+</p>
+
+
+<center>
+<img alt="" src="figura.png" style="width: 532px; height: 228px;"/>
+</center>
+
+<p>
+O código de cada caractere diferente do texto depende do caminho que exite, na árvore final, da raiz ao nó folha correspondente ao caractere.
+O tamanho do código é igual ao número de arestas nesse caminho (o qual coincide com o número de nós internos no caminho).
+Assumindo que à árvore da esquerda foi construída pelo algoritmo, o codigo de "r" tem tamanho 3, enquanto que o código de "d" tem tamanho 4.
+</p>
+
+<p>
+Sua tarefa é: dados os tamanhos dos N códigos escolhidos pelo algoritmo de Huffman, encontre o tamanho mínimo (número total de caracteres) que o texto pode ter tal que os códigos escolhidos tenham os tamanhos formecidos.
+</p>
+
+<h3>Entrada</h3>
+
+<p>
+A entrada contém vários casos de testes.<br>
+A primeira linha de cada caso de teste contém um inteiro N (2 &lt;= N &lt;= 50) que indica o número de caracteres diferentes que ocorrem no texto.<br>
+A segunda linha contém N inteiros Li que indicam o tamanho dos códigos escolhidos pelo algoritmo de Huffman para os N diferentes caracteres (1 &lt;= Li &lt;= 50, para i = 1, 2, ... ,N).<br>
+Você pode assumir que existe pelo menos uma árvore construída pelo algoritmo de Huffman que produz códigos com os tamanhos fornecidos.<br>
+Quando N=0 a entrada termina.
+</p>
+
+<h3>Saída</h3>
+
+Para cada caso de teste, imprima uma linha com o tamanho mínimo (número total de caracteres) que o texto pode ter tal que os códigos gerados tenham os tamanhos fornecidos.
+
+<h3>Exemplo</h3>
+<pre>
+Entrada:
+2
+1 1
+4
+2 2 2 2
+10
+8 2 4 7 5 1 6 9 3 9
+0
+
+Saída:
+2
+4
+89
+
+</pre>

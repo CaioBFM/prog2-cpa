@@ -2,70 +2,71 @@
 #include <vector>
 #include <queue>
 #include <tuple>
+#include <functional>
 
 using namespace std;
 
-int dijkstraPar(const vector<vector<int>>& graph, int c){
-	vector<vector<int>> dist(c + 1, vector<int>(2, 10001));
-	for(int i = 1; i <= c; ++i){
-		dist[i][0] = 10001;
-		dist[i][1] = 10001;
-	}
+const int INF = 1000000000;
 
-	dist[1][0] = 0;
+int dijkstraPar(const vector<vector<pair<int, int>>>& graph, int c) {
+    vector<vector<int>> dist(c + 1, vector<int>(2, INF));
 
-	priority_queue<tuple<int,int,int>, vector<tuple<int,int,int>>, greater<tuple<int,int,int>>> minHeap;
+    dist[1][0] = 0;
 
-	minHeap.push(make_tuple(0, 1, 0)); // cost, city, parity
+    priority_queue<
+        tuple<int, int, int>,
+        vector<tuple<int, int, int>>,
+        greater<tuple<int, int, int>>
+    > minHeap;
 
-	while(!minHeap.empty()){
+    minHeap.push(make_tuple(0, 1, 0)); // cost, city, parity
 
-		auto [currentCost, currentCity, currentParity] = minHeap.top();
-		minHeap.pop();
+    while (!minHeap.empty()) {
+        auto [currentCost, currentCity, currentParity] = minHeap.top();
+        minHeap.pop();
 
-		if(currentCost > dist[currentCity][currentParity]){
-			continue;
-		}
+        if (currentCost > dist[currentCity][currentParity]) {
+            continue;
+        }
 
-		for(int nextCity = 1; nextCity <= c; ++nextCity){
+        for (auto [nextCity, toll] : graph[currentCity]) {
+            int newCost = currentCost + toll;
+            int newParity = 1 - currentParity;
 
-			if(graph[currentCity][nextCity] != 0){
-				int newCost = currentCost + graph[currentCity][nextCity];
-				int newParity = 1 - currentParity; // toggle parity
+            if (newCost < dist[nextCity][newParity]) {
+                dist[nextCity][newParity] = newCost;
+                minHeap.push(make_tuple(newCost, nextCity, newParity));
+            }
+        }
+    }
 
-				// update distance if a shorter path is found
-				if(newCost < dist[nextCity][newParity]){
-					dist[nextCity][newParity] = newCost;
-					minHeap.push(make_tuple(newCost, nextCity, newParity));
-				}
-			}
-		}
-	}
-
-	return dist[c][0];
+    return dist[c][0];
 }
 
-int main(){
-	int c;
-	int v;
-	cin >> c;
-	cin >> v;
-	
-	vector<vector<int>> graph(c + 1, vector<int>(c + 1, 0));
-	
-	int c1, c2, g;
+int main() {
+    int c;
+    int v;
+    cin >> c;
+    cin >> v;
 
-	for(int i = 0; i < v; ++i){
-		cin >> c1 >> c2 >> g;
-		graph[c1][c2] = g;
-		graph[c2][c1] = g;
-	}
+    vector<vector<pair<int, int>>> graph(c + 1);
 
-	int result = dijkstraPar(graph, c);
-	if(result == 10001){
-		cout << -1 << endl; // no path found
-	} else {
-		cout << result << endl;
-	}
+    int c1, c2, g;
 
+    for (int i = 0; i < v; ++i) {
+        cin >> c1 >> c2 >> g;
+
+        graph[c1].push_back({c2, g});
+        graph[c2].push_back({c1, g});
+    }
+
+    int result = dijkstraPar(graph, c);
+
+    if (result == INF) {
+        cout << -1 << endl;
+    } else {
+        cout << result << endl;
+    }
+
+    return 0;
 }

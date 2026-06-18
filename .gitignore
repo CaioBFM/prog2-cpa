@@ -1,0 +1,13 @@
+# Ignore compiled executables and temporary build artifacts
+*.exe
+*.o
+*.obj
+*.so
+*.dll
+*.dylib
+*.a
+
+# Ignore editor/OS files
+.DS_Store
+*.swp
+*~

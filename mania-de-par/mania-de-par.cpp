@@ -1,71 +1,92 @@
 #include <iostream>
 #include <vector>
 #include <queue>
-#include <tuple>
-#include <functional>
+#include <limits>
 
 using namespace std;
 
-const int INF = 1000000000;
+const int INF = numeric_limits<int>::max();
 
-int dijkstraPar(const vector<vector<pair<int, int>>>& graph, int c) {
-    vector<vector<int>> dist(c + 1, vector<int>(2, INF));
+struct Edge {
+    int to;
+    int cost;
+};
+
+struct State {
+    int cost;
+    int city;
+    int parity;
+};
+
+struct CompareState {
+    bool operator()(const State& a, const State& b) const {
+        return a.cost > b.cost; // lower cost has higher priority
+    }
+};
+
+int dijkstraEvenTolls(const vector<vector<Edge>>& graph, int destination) {
+    int numberOfCities = graph.size() - 1;
+
+    // dist(i, j) = minimum cost to reach city i with parity j (0 for even, 1 for odd)
+    vector<vector<int>> dist(numberOfCities + 1, vector<int>(2, INF));
+
+    // Min-heap priority queue to store states based on cost
+    priority_queue<State, vector<State>, CompareState> pq;
 
     dist[1][0] = 0;
+    pq.push({0, 1, 0}); // cost, city, parity
 
-    priority_queue<
-        tuple<int, int, int>,
-        vector<tuple<int, int, int>>,
-        greater<tuple<int, int, int>>
-    > minHeap;
+    while (!pq.empty()) {
+        State current = pq.top();
+        pq.pop();
 
-    minHeap.push(make_tuple(0, 1, 0)); // cost, city, parity
+        int currentCost = current.cost;
+        int currentCity = current.city;
+        int currentParity = current.parity;
 
-    while (!minHeap.empty()) {
-        auto [currentCost, currentCity, currentParity] = minHeap.top();
-        minHeap.pop();
-
+        // If we have already found a better way to reach this city with the same parity, skip
         if (currentCost > dist[currentCity][currentParity]) {
             continue;
         }
 
-        for (auto [nextCity, toll] : graph[currentCity]) {
-            int newCost = currentCost + toll;
+        // Explore neighbors of the current city and update distances 
+        for (const Edge& edge : graph[currentCity]) {
+            int nextCity = edge.to;
+            int newCost = currentCost + edge.cost;
             int newParity = 1 - currentParity;
 
+            // If newCost is cheaper than dist(nextCity, newParity), update and push to the priority queue
             if (newCost < dist[nextCity][newParity]) {
                 dist[nextCity][newParity] = newCost;
-                minHeap.push(make_tuple(newCost, nextCity, newParity));
+                pq.push({newCost, nextCity, newParity});
             }
         }
     }
 
-    return dist[c][0];
+    return dist[destination][0];
 }
 
 int main() {
-    int c;
-    int v;
-    cin >> c;
-    cin >> v;
+    int cities, roads;
+    cin >> cities >> roads;
 
-    vector<vector<pair<int, int>>> graph(c + 1);
+    vector<vector<Edge>> graph(cities + 1);
 
-    int c1, c2, g;
+    for (int i = 0; i < roads; i++) {
+        int city1, city2, toll;
+        cin >> city1 >> city2 >> toll;
 
-    for (int i = 0; i < v; ++i) {
-        cin >> c1 >> c2 >> g;
-
-        graph[c1].push_back({c2, g});
-        graph[c2].push_back({c1, g});
+        graph[city1].push_back({city2, toll});
+        graph[city2].push_back({city1, toll});
     }
 
-    int result = dijkstraPar(graph, c);
+    int answer = dijkstraEvenTolls(graph, cities);
 
-    if (result == INF) {
+    if (answer == INF) {
+        // Impossible to reach the destination with an even number of tolls, output -1
         cout << -1 << endl;
     } else {
-        cout << result << endl;
+        cout << answer << endl;
     }
 
     return 0;

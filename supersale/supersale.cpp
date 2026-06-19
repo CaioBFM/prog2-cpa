@@ -32,36 +32,36 @@ int knapsack_PD(int c, int n, const int value[], const int weight[]){
 }
 
 int main(){
-    int t; // number of test cases
-    cin >> t;
+    int testCases;
+    cin >> testCases;
 
-    for(int i = 0; i < t; ++i){
+    for(int i = 0; i < testCases; ++i){
         int ans = 0; 
 
-        int n; // number of items
-        cin >> n;
+        int numberOfItens;
+        cin >> numberOfItens;
 
         int p; // price of item
         int w; // weight of item
 
-        int value[n]; // array to store the price of items
-        int weight[n]; // array to store the weight of items
+        int value[numberOfItens]; // array to store the value of items
+        int weight[numberOfItens]; // array to store the weight of items
 
-        for(int j = 0; j < n; ++j){
+        for(int i = 0; i < numberOfItens; ++i){
             cin >> p;
             cin >> w;
-            value[j] = p;
-            weight[j] = w;
+            value[i] = p;
+            weight[i] = w;
         }
 
-        int g; // number of people in family
-        cin >> g;
+        int familySize;
+        cin >> familySize;
 
-        int c; // capacity of each knapsack for each person
+        int capacity; // capacity of each knapsack for each person
 
-        for (int k = 0; k < g; k++){
-            cin >> c;
-            ans += knapsack_PD(c, n, value, weight);
+        for (int k = 0; k < familySize; ++k){
+            cin >> capacity;
+            ans += knapsack_PD(capacity, numberOfItens, value, weight);
         }
         
         cout << ans << endl;
